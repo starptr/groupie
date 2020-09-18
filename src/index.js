@@ -84,6 +84,7 @@ client.on("message", message => {
 										},
 									})
 									.then(() => {
+										message.member.roles.add(message.guild.roles.cache.find(role => role.name === fullUGName));
 										message.channel.send(
 											`Cheers! I made your usergroup, ${message.guild.roles.cache.find(
 												role => role.name === fullUGName
