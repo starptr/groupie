@@ -1,0 +1,25 @@
+{
+	"name": "groupie",
+	"version": "0.1.0",
+	"description": "Usergroup and keyword ping manager for Discord",
+	"main": "index.js",
+	"scripts": {
+		"start": "babel-node ./src/index.js",
+		"develop": "babel-watch ./src/index.js",
+		"build": "babel src --out-dir bin --copy-files",
+		"deploy": "node ./bin/index.js"
+	},
+	"author": "Yuto Nishida <yuyu.nishida@gmail.com>",
+	"license": "GPL-3.0-or-later",
+	"dependencies": {
+		"babel-watch": "^7.0.0",
+		"discord.js": "^12.3.1",
+		"dotenv": "^8.2.0"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.11.6",
+		"@babel/core": "^7.11.6",
+		"@babel/node": "^7.10.5",
+		"@babel/preset-env": "^7.11.5"
+	}
+}
