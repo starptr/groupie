@@ -34,13 +34,22 @@ client.on("message", message => {
 		const ugName = cmdStr.slice(0, proper_ugname_end);
 		const pingMessage = cmdStr.slice(proper_ugname_end).trim();
 		const fullUGName = `${process.env.USERGROUP_NAME_PREFIX}${ugName}`;
-		message.channel.send(
-			`Heyy ${message.guild.roles.cache.find(role => role.name === fullUGName)}, ${
-				pingMessage
-					? `important message from ${message.member.user}: ${pingMessage}`
-					: `you got a ping from ${message.member.user}!`
-			}`
-		);
+
+		const pingedUG = message.guild.roles.cache.find(role => role.name === fullUGName);
+
+		if (pingedUG) {
+			message.channel.send(
+				`Heyy ${pingedUG}, ${
+					pingMessage
+						? `important message from ${message.member.user}: ${pingMessage}`
+						: `you got a ping from ${message.member.user}!`
+				}`
+			);
+		} else {
+			message.channel.send(
+				`Sorry, I couldn't find that usergroup. Make sure that you don't include \`@${process.env.USERGROUP_NAME_PREFIX}\` at the beginning of the usergroup name in your command.`
+			);
+		}
 	} else if (message.channel.id === process.env.DISCORD_CHANNELID_COMMANDS) {
 		//Check message is in commands channel
 		if (message.content.startsWith(prefix)) {
@@ -186,9 +195,7 @@ Beware that I can only do most of things in ${message.guild.channels.cache.get(
 								unusedUGs.forEach(role => role.delete());
 								message.channel.send(`Now they're gone :(`);
 							} else if (unusedUGs.size > 0) {
-								message.channel.send(
-									`If you want me to delete them, type \`${prefix}cleanup confirm\` ;)`
-								);
+								message.channel.send(`If you want me to delete them, type \`${prefix}cleanup confirm\` ;)`);
 							}
 						} else {
 							message.channel.send(`Sorry, I can't do that for you. Try asking someone who can manage roles for that ;)`);
