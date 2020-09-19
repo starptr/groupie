@@ -50,19 +50,42 @@ client.on("message", message => {
 			switch (cmd[0]) {
 				case "help":
 					{
-						message.channel
-							.send(`Hii ${message.member.user}!! I am your friendly neighborhood usergroup manager! I can do the following things for you:
-\`${prefix}make <name>\` Make a usergroup called <name> and join it
-\`${prefix}join <name>\` Join a usergroup called <name>
-\`${prefix}leave <name>\` Leave a usergroup called <name>
-\`${prefix}ping <name> [message]\` Ping the <name> usergroup with an optional [message]`);
+						message.channel.send(`Hiii ${
+							message.member.user
+						}!! I am your friendly neighborhood usergroup manager, made by <@195013137987141632>! I can do the following things for you:
+\`${prefix}help [admin]\` This message, and optionally some advanced options ;)
+\`${prefix}make <UG>\` Make a usergroup called <UG> and join it
+\`${prefix}join <UG>\` Join a usergroup called <UG>
+\`${prefix}leave <UG>\` Leave a usergroup called <UG>
+\`${prefix}ping <UG> [message]\` Ping the <UG> usergroup with an optional [message]
+\`${prefix}source\` Get the link to the source code
+Beware that I can only do most of things in ${message.guild.channels.cache.get(
+							process.env.DISCORD_CHANNELID_COMMANDS
+						)}! The exception to that would only be \`${prefix}ping\`.
+`);
+
+						if (cmd[1] === "admin") {
+							message.channel.send(`In addition, I can also help server admins with the following:
+\`${prefix}up\` Check if I'm online
+\`${prefix}cleanup [confirm]\` Get which usergroups are empty, and delete them with confirmation
+`);
+						}
 					}
 					break;
-				case "ping":
+				case "source":
+				case "sauce":
+				case "sc":
 					{
-						message.channel.send("Pong!");
+						message.channel.send("My blueprint is on https://github.com/starptr/groupie !");
 					}
 					break;
+				case "online":
+				case "up":
+					{
+						message.channel.send("I'm up and well, thank for asking!");
+					}
+					break;
+				case "create":
 				case "make":
 					{
 						const ugName = cmd[1];
@@ -99,6 +122,7 @@ client.on("message", message => {
 						}
 					}
 					break;
+				case "add":
 				case "join":
 					{
 						const ugName = cmd[1];
@@ -120,6 +144,7 @@ client.on("message", message => {
 						}
 					}
 					break;
+				case "remove":
 				case "leave":
 					{
 						const ugName = cmd[1];
@@ -138,6 +163,35 @@ client.on("message", message => {
 									`Sorry, I couldn't find that usergroup. Make sure that you don't include \`@${process.env.USERGROUP_NAME_PREFIX}\` at the beginning of the usergroup name in your command.`
 								);
 							}
+						}
+					}
+					break;
+				case "cleanup":
+					{
+						//Removal for all ug's with 0 members
+						if (message.member.hasPermission("MANAGE_ROLES")) {
+							const unusedUGs = message.guild.roles.cache.filter(
+								role => role.name.startsWith(process.env.USERGROUP_NAME_PREFIX) && role.members.size === 0
+							);
+							message.channel.send(
+								`I found ${unusedUGs.size} usergroups without any members.${
+									unusedUGs.size > 0
+										? ` They are: \`${Array.from(unusedUGs.values())
+												.map(role => role.name)
+												.join("; ")}\``
+										: ""
+								}`
+							);
+							if (cmd[1] === "confirm") {
+								unusedUGs.forEach(role => role.delete());
+								message.channel.send(`Now they're gone :(`);
+							} else if (unusedUGs.size > 0) {
+								message.channel.send(
+									`If you want me to delete them, type \`${prefix}cleanup confirm\` ;)`
+								);
+							}
+						} else {
+							message.channel.send(`Sorry, I can't do that for you. Try asking someone who can manage roles for that ;)`);
 						}
 					}
 					break;
