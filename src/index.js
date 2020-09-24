@@ -28,27 +28,32 @@ client.on("message", message => {
 	//Global ping command
 	if (cmdStr.slice(0, 5) === `${prefix}ping`) {
 		//Remove command
-		cmdStr = cmdStr.slice(cmdStr.indexOf(" ")).trim();
+		cmdStr = cmdStr.substring(5).trim();
 		let next_space = cmdStr.indexOf(" ");
 		let proper_ugname_end = next_space >= 0 ? next_space : cmdStr.length;
-		const ugName = cmdStr.slice(0, proper_ugname_end);
-		const pingMessage = cmdStr.slice(proper_ugname_end).trim();
-		const fullUGName = `${process.env.USERGROUP_NAME_PREFIX}${ugName}`;
+		const ugName = cmdStr.substring(0, proper_ugname_end);
 
-		const pingedUG = message.guild.roles.cache.find(role => role.name === fullUGName);
+		if (ugName) {
+			const pingMessage = cmdStr.slice(proper_ugname_end).trim();
+			const fullUGName = `${process.env.USERGROUP_NAME_PREFIX}${ugName}`;
 
-		if (pingedUG) {
-			message.channel.send(
-				`Heyy ${pingedUG}, ${
-					pingMessage
-						? `important message from ${message.member.user}: ${pingMessage}`
-						: `you got a ping from ${message.member.user}!`
-				}`
-			);
+			const pingedUG = message.guild.roles.cache.find(role => role.name === fullUGName);
+
+			if (pingedUG) {
+				message.channel.send(
+					`Heyy ${pingedUG}, ${
+						pingMessage
+							? `important message from ${message.member.user}: ${pingMessage}`
+							: `you got a ping from ${message.member.user}!`
+					}`
+				);
+			} else {
+				message.channel.send(
+					`Sorry, I couldn't find that usergroup. Make sure that you don't include \`@${process.env.USERGROUP_NAME_PREFIX}\` at the beginning of the usergroup name in your command.`
+				);
+			}
 		} else {
-			message.channel.send(
-				`Sorry, I couldn't find that usergroup. Make sure that you don't include \`@${process.env.USERGROUP_NAME_PREFIX}\` at the beginning of the usergroup name in your command.`
-			);
+			message.channel.send(`Which usergroup tho?`);
 		}
 	} else if (message.channel.id === process.env.DISCORD_CHANNELID_COMMANDS) {
 		//Check message is in commands channel
@@ -63,6 +68,7 @@ client.on("message", message => {
 							message.member.user
 						}!! I am your friendly neighborhood usergroup manager, made by <@195013137987141632>! I can do the following things for you:
 \`${prefix}help [admin]\` This message, and optionally some advanced options ;)
+\`${prefix}list\` Get the list of all usergroups in this server
 \`${prefix}make <UG>\` Make a usergroup called <UG> and join it
 \`${prefix}join <UG>\` Join a usergroup called <UG>
 \`${prefix}leave <UG>\` Leave a usergroup called <UG>
@@ -92,6 +98,19 @@ Beware that I can only do most of things in ${message.guild.channels.cache.get(
 				case "up":
 					{
 						message.channel.send("I'm up and well, thank for asking!");
+					}
+					break;
+				case "l":
+				case "ls":
+				case "list":
+					{
+						const ugs = message.guild.roles.cache
+							.filter(role => role.name.startsWith(process.env.USERGROUP_NAME_PREFIX))
+							.mapValues(role => role.name.substring(process.env.USERGROUP_NAME_PREFIX.length))
+							.array()
+							.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()) || a.localeCompare(b));
+
+						message.channel.send(`Here are all of the existing usergroups: \`${ugs.join("`, `")}\`.`);
 					}
 					break;
 				case "create":
