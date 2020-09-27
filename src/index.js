@@ -66,9 +66,9 @@ client.on("message", message => {
 					{
 						message.channel.send(`Hiii ${
 							message.member.user
-						}!! I am your friendly neighborhood usergroup manager, made by <@195013137987141632>! I can do the following things for you:
+						}!! I am your friendly neighborhood usergroup manager, made by \`@*ptr\`! I can do the following things for you:
 \`${prefix}help [admin]\` This message, and optionally some advanced options ;)
-\`${prefix}list\` Get the list of all usergroups in this server
+\`${prefix}list [UG]\` Get the list of all usergroups or all users in the [UG] usergroup in this server
 \`${prefix}make <UG>\` Make a usergroup called <UG> and join it
 \`${prefix}join <UG>\` Join a usergroup called <UG>
 \`${prefix}leave <UG>\` Leave a usergroup called <UG>
@@ -104,13 +104,30 @@ Beware that I can only do most of things in ${message.guild.channels.cache.get(
 				case "ls":
 				case "list":
 					{
-						const ugs = message.guild.roles.cache
-							.filter(role => role.name.startsWith(process.env.USERGROUP_NAME_PREFIX))
-							.mapValues(role => role.name.substring(process.env.USERGROUP_NAME_PREFIX.length))
-							.array()
-							.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()) || a.localeCompare(b));
+						if (cmd[1]) {
+							const ugName = cmd[1];
+							const fullUGName = `${process.env.USERGROUP_NAME_PREFIX}${ugName}`;
+							const ugRole = message.guild.roles.cache.find(role => role.name === fullUGName);
+							if (ugRole) {
+								message.channel.send(
+									`Here are the list of members in the \`${ugName}\` usergroup: \`${ugRole.members
+										.map(member => member.nickname || member.user.username)
+										.join("`, `")}\`.`
+								);
+							} else {
+								message.channel.send(
+									`Sorry, I couldn't find that usergroup. Make sure that you don't include \`@${process.env.USERGROUP_NAME_PREFIX}\` at the beginning of the usergroup name in your command.`
+								);
+							}
+						} else {
+							const ugs = message.guild.roles.cache
+								.filter(role => role.name.startsWith(process.env.USERGROUP_NAME_PREFIX))
+								.mapValues(role => role.name.substring(process.env.USERGROUP_NAME_PREFIX.length))
+								.array()
+								.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()) || a.localeCompare(b));
 
-						message.channel.send(`Here are all of the existing usergroups: \`${ugs.join("`, `")}\`.`);
+							message.channel.send(`Here are all of the existing usergroups: \`${ugs.join("`, `")}\`.`);
+						}
 					}
 					break;
 				case "create":
