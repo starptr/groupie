@@ -15,3 +15,11 @@ yarn install
 yarn build
 yarn deploy
 ```
+
+## Features
+- `ping` to ping a usergroup
+- `make` to make a usergroup
+- `join` to join a usergroup
+- `leave` to leave a usergroup
+- `cleanup` to delete empty usergroups
+- Support for `./src/blacklist.json`
