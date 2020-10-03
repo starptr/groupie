@@ -47,23 +47,27 @@ client.on("message", message => {
 			const ugName = cmdStr.substring(0, proper_ugname_end);
 
 			if (ugName) {
-				const pingMessage = cmdStr.slice(proper_ugname_end).trim();
-				const fullUGName = `${process.env.USERGROUP_NAME_PREFIX}${ugName}`;
-
-				const pingedUG = message.guild.roles.cache.find(role => role.name === fullUGName);
-
-				if (pingedUG) {
-					message.channel.send(
-						`Heyy ${pingedUG}, ${
-							pingMessage
-								? `important message from ${message.member.user}: ${pingMessage}`
-								: `you got a ping from ${message.member.user}!`
-						}`
-					);
+				if (ugName === "everyone") {
+					message.channel.send(`( ͡° ͜ʖ ͡°)`)
 				} else {
-					message.channel.send(
-						`Sorry, I couldn't find that usergroup. Make sure that you don't include \`@${process.env.USERGROUP_NAME_PREFIX}\` at the beginning of the usergroup name in your command.`
-					);
+					const pingMessage = cmdStr.slice(proper_ugname_end).trim();
+					const fullUGName = `${process.env.USERGROUP_NAME_PREFIX}${ugName}`;
+
+					const pingedUG = message.guild.roles.cache.find(role => role.name === fullUGName);
+
+					if (pingedUG) {
+						message.channel.send(
+							`Heyy ${pingedUG}, ${
+								pingMessage
+									? `important message from ${message.member.user}: ${pingMessage}`
+									: `you got a ping from ${message.member.user}!`
+							}`
+						);
+					} else {
+						message.channel.send(
+							`Sorry, I couldn't find that usergroup. Make sure that you don't include \`@${process.env.USERGROUP_NAME_PREFIX}\` at the beginning of the usergroup name in your command.`
+						);
+					}
 				}
 			} else {
 				message.channel.send(`Which usergroup tho?`);
