@@ -35,7 +35,7 @@ client.once("ready", () => {
 
 //Listen to commands in the commands channel (except help)
 client.on("message", message => {
-	if (!blacklist.includes(message.member.id)) {
+	if (!blacklist.includes(message.member?.id)) {
 		const prefix = process.env.DISCORD_COMMAND_PREFIX;
 		let cmdStr = message.content.trim();
 		//Global ping command
