@@ -48,7 +48,7 @@ client.on("message", message => {
 
 			if (ugName) {
 				if (ugName === "everyone") {
-					message.channel.send(`( ͡° ͜ʖ ͡°)`)
+					message.channel.send(`( ͡° ͜ʖ ͡°)`);
 				} else {
 					const pingMessage = cmdStr.slice(proper_ugname_end).trim();
 					const fullUGName = `${process.env.USERGROUP_NAME_PREFIX}${ugName}`;
@@ -85,7 +85,7 @@ client.on("message", message => {
 								message.member.user
 							}!! I am your friendly neighborhood usergroup manager, made by \`@*ptr\`! I can do the following things for you:
 \`${prefix}help [admin]\` This message, and optionally some advanced options ;)
-\`${prefix}list [UG]\` Get the list of all usergroups or all users in the [UG] usergroup in this server
+\`${prefix}list [UG]\` **(BUG: Not all roles or members are displaying)** Get the list of all usergroups or all users in the [UG] usergroup in this server
 \`${prefix}make <UG>\` Make a usergroup called <UG> and join it
 \`${prefix}join <UG>\` Join a usergroup called <UG>
 \`${prefix}leave <UG>\` Leave a usergroup called <UG>
