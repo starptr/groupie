@@ -117,3 +117,6 @@ dist
 
 # blacklisted user ids
 blacklist.json
+
+# transpiled direcotry
+bin/
